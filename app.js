@@ -7,23 +7,42 @@ const CHECK= "fa-check-circle";
 const UNCHECK = "fa-cricle-thin";
 const LINE_THROUGH = "lineThrough";
 
-const options={weekday: "long",month:"short",day="numeric"};
+const options={weekday : "long",month :"short",day : "numeric"};
 const today = new Date();
 
 dateElement.innerHTML = today.toLocaleDateString("en-US",options);
-
+ 
 function addToDo(toDo, id, done, trash)
 {
-    if(trash){return;}
+    if(trash){ return; }
     
     const DONE = done ? CHECK : UNCHECK;
     const LINE = done ? LINE_THROUGH : "";
-    let LIST =[], id=0;
+    let LIST , id;
+    
+    let data = localStorage.getItem("TODO");
+
+    if(data){
+        LSIT = JSON.parse(data);
+        id = LIST.length;
+        loadList(LIST);
+    }
+    else{
+        LIST = [];
+        id = 0;
+    }
+    
+    function loadList(array){
+        array.forEach(function(item){
+            addToDo(item.name,item.id,item.done,item.trash);
+        })
+    }
+
 
     const item = `
                     <li class = "item">
                     <i class = "fa ${DONE} co" job = "complete" id="${id}"></i>
-                    <p class = "text ${LINE}">${toDo}</p>
+                    <p class = "text ${LINE}"> ${toDo} </p>
                     <i class = "fa fa-trash-o de" job = "delete" id ="${id}"></i>
                     </li>
                     `;
@@ -45,6 +64,8 @@ document.addEventListener("keyup",function(even){
                 done : false,
                 trash : false  
             });
+
+            localStorage.setItem("TODO",JSON.stringify(LIST));
         }
         input.value="";
     }
@@ -62,7 +83,7 @@ function completeToDo(element)
 function removeToDo(element)
 {
     element.parentNode.parentNode.removeChild(element.parentnode);
-    LIST[element.id].trash = "true";
+    LIST[element.id].trash = true;
 }
 
 list.addEventListener("click",function(event){
@@ -75,4 +96,6 @@ list.addEventListener("click",function(event){
     else if(elementJob == "remove"){
         removeToDo(element);     
     }
+
+    localStorage.setItem("TODO",JSON.stringify(LIST));
 }
