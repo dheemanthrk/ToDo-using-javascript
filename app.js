@@ -64,6 +64,7 @@ document.addEventListener("keyup",function(even){
                 done : false,
                 trash : false  
             });
+            //Problem
 
             localStorage.setItem("TODO",JSON.stringify(LIST));
         }
